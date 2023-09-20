@@ -2,31 +2,32 @@
 
 /**
  * HandleUserInput - handle getting input from user
- * Return: return 0 on success
-*/
-int HandleUserInput(void)
+ * Return: return args
+ */
+char **HandleUserInput(void)
 {
 	char *userInput;
 	char *userInputCopy;
 	size_t inputSize = 0;
-	ssize_t inputCharCount;
+	ssize_t inputCharCount = -1;
 
 	inputCharCount = getline(&userInput, &inputSize, stdin);
 	if (inputCharCount == -1)
 	{
 		_puts("exiting shell...\n");
-		return (-1);
+		return (NULL);
 	}
 	userInputCopy = malloc(sizeof(char) * inputCharCount);
 	if (userInputCopy == NULL)
 	{
 		perror("Memory Allocation Error!");
-		return (-1);
+		return (NULL);
 	}
 	strcpy(userInputCopy, userInput);
+	char **args;
 
-	_puts(GetPath(SubCommandInInput(userInput, userInputCopy)[0]));
-	return (0);
+	args = SubCommandInInput(userInput, userInputCopy);
+	return (args);
 }
 /**
  * SubCommandInInput - operate on user input and extract command
@@ -34,14 +35,13 @@ int HandleUserInput(void)
  * @userInput: string for userInput
  * @userInputCopy: a copy of user input
  * Return: returns an array of string that has possible commands to excute
-*/
+ */
 char **SubCommandInInput(char *userInput, char *userInputCopy)
 {
 
 	const char *seprator = " \n";
 	int subCommandCount = 0;
 	char **argv;
-
 
 	char *subCommand;
 
@@ -52,7 +52,6 @@ char **SubCommandInInput(char *userInput, char *userInputCopy)
 		subCommand = strtok(NULL, seprator);
 	}
 	subCommandCount++; /*for the NULL terminator*/
-	printf("%d \n", subCommandCount);
 	argv = malloc(sizeof(char *) * subCommandCount);
 	subCommand = strtok(userInput, seprator);
 
@@ -67,32 +66,37 @@ char **SubCommandInInput(char *userInput, char *userInputCopy)
 	argv[i] = NULL;
 	return (argv);
 }
-
+/**
+ * GetPath - check the path of given command
+ * @command: command
+ * Return: returns a string for the path of command to excute
+ */
 char *GetPath(char *command)
 {
 	char *path, *pathCopy, *subPath, *commandPath;
-	int commandLength, dirLenght;
+	int commandLength, subCommandDirLenght;
 	struct stat buffer;
 
-	if (stat(command, &buffer) == 0)
-		return (command);
-
 	path = getenv("PATH");
-
 	if (path)
 	{
-		pathCopy = strdup(path);
+		pathCopy = malloc(sizeof(char) * strlen(path));
+		if (pathCopy == NULL)
+		{
+			perror("Memory Allocation Error!");
+			return (NULL);
+		}
+		strcpy(pathCopy, path);
 		commandLength = strlen(command);
 		subPath = strtok(pathCopy, ":");
-
 		while (subPath != NULL)
 		{
-			dirLenght = strlen(subPath);
-			commandPath = malloc(dirLenght + commandLength + 2);
+			subCommandDirLenght = strlen(subPath);
+			commandPath = malloc(subCommandDirLenght + commandLength + 2);
 			strcpy(commandPath, subPath);
-			strcpy(commandPath, "/");
-			strcpy(commandPath, command);
-			strcpy(commandPath, "\0");
+			strcat(commandPath, "/");
+			strcat(commandPath, command);
+			strcat(commandPath, "\0");
 			if (stat(commandPath, &buffer) == 0)
 			{
 				free(pathCopy);
@@ -100,13 +104,30 @@ char *GetPath(char *command)
 			}
 			else
 			{
-				free(pathCopy);
 				subPath = strtok(NULL, ":");
 			}
-
 		}
 		free(pathCopy);
+		if (stat(command, &buffer) == 0)
+			return (command);
 		return (NULL);
 	}
 	return (NULL);
+}
+/**
+ * ExcuteCommand - Excute Command
+ * @commandPath: command path
+ * @args: array of strings to args
+ * Return: returns 0 on success
+ */
+int ExcuteCommand(char *commandPath, char **args)
+{
+	char *env[] = {NULL};
+
+	if (execve(commandPath, args, env) == -1)
+	{
+		perror("No such file or directory");
+		return (1);
+	}
+	return (0);
 }
