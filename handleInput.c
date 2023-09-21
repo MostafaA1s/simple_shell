@@ -26,6 +26,7 @@ char **HandleUserInput(void)
 		free(userInput);
 		return (args);
 }
+	userInput = strtrim(userInput);
 	userInputCopy = malloc(sizeof(char) * inputCharCount);
 	if (userInputCopy == NULL)
 	{
@@ -33,7 +34,6 @@ char **HandleUserInput(void)
 		return (NULL);
 	}
 	strcpy(userInputCopy, userInput);
-
 	args = SubCommandInInput(userInput, userInputCopy);
 	free(userInputCopy);
 	free(userInput);
@@ -80,11 +80,10 @@ char **SubCommandInInput(char *userInput, char *userInputCopy)
  */
 char *GetPath(char *command)
 {
-	char *path, *pathCopy, *subPath, *commandPath;
+	char *path = getenv("PATH"), *pathCopy, *subPath, *commandPath;
 	int commandLength, subCommandDirLenght;
 	struct stat buffer;
 
-	path = getenv("PATH");
 	if (path)
 	{
 		pathCopy = malloc(sizeof(char) * strlen(path));
