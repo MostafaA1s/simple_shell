@@ -16,12 +16,14 @@ char **HandleUserInput(void)
 	if (inputCharCount == -1)
 	{
 		_puts("exiting shell...\n");
+		free(userInput);
 		return (NULL);
 	}
 	else if (inputCharCount == 1)
 {
 		args = (char **)malloc(sizeof(char *));
 		args[0] = "Empty";
+		free(userInput);
 		return (args);
 }
 	userInputCopy = malloc(sizeof(char) * inputCharCount);
@@ -33,6 +35,8 @@ char **HandleUserInput(void)
 	strcpy(userInputCopy, userInput);
 
 	args = SubCommandInInput(userInput, userInputCopy);
+	free(userInputCopy);
+	free(userInput);
 	return (args);
 }
 /**
@@ -66,6 +70,7 @@ char **SubCommandInInput(char *userInput, char *userInputCopy)
 		subCommand = strtok(NULL, seprator);
 	}
 	argv[i] = NULL;
+	free(subCommand);
 	return (argv);
 }
 /**
@@ -86,6 +91,7 @@ char *GetPath(char *command)
 		if (pathCopy == NULL)
 		{
 			perror("Memory Allocation Error!");
+			free(pathCopy);
 			return (NULL);
 		}
 		strcpy(pathCopy, path);
