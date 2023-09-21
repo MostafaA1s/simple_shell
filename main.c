@@ -10,17 +10,21 @@ int main(int ac, char **argv)
 	char *shellOutput = "myShell $ ";
 	char *pathOfCommand;
 	int status;
+	int inputResult;
 	(void)ac;
-
 	_puts(shellOutput);
 	while (1)
 	{
 		argv = HandleUserInput();
+		if (argv)
+		inputResult = strcmp(argv[0], "Empty");
 		if (argv == NULL)
-		{
 			return (-1);
+		else if (inputResult == 0)
+		{
+			_puts(shellOutput);
+			continue;
 		}
-
 		pathOfCommand = GetPath(argv[0]);
 		if (pathOfCommand)
 		{
@@ -42,6 +46,5 @@ int main(int ac, char **argv)
 			_puts(shellOutput);
 		}
 	}
-
 	return (0);
 }

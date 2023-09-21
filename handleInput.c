@@ -18,6 +18,12 @@ char **HandleUserInput(void)
 		_puts("exiting shell...\n");
 		return (NULL);
 	}
+	else if (inputCharCount == 1)
+{
+		args = (char **)malloc(sizeof(char *));
+		args[0] = "Empty";
+		return (args);
+}
 	userInputCopy = malloc(sizeof(char) * inputCharCount);
 	if (userInputCopy == NULL)
 	{
@@ -38,7 +44,6 @@ char **HandleUserInput(void)
  */
 char **SubCommandInInput(char *userInput, char *userInputCopy)
 {
-
 	const char *seprator = " \n";
 	int subCommandCount = 0;
 	char **argv;
