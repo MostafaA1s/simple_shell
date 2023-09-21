@@ -26,24 +26,16 @@ int main(int ac, char **argv)
 			pid_t pid = fork();
 
 			if (pid == -1)
-			{
 				perror("fork");
-			}
 			else if (pid == 0)
-			{
 				ExcuteCommand(pathOfCommand, argv);
-			}
 			int status;
 
 			waitpid(pid, &status, 0);
 			if (WIFEXITED(status))
-			{
 				_puts(shellOutput);
-			}
 			else
-			{
 				perror("");
-			}
 		}
 		else
 		{
