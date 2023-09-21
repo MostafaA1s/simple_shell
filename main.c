@@ -8,6 +8,8 @@
 int main(int ac, char **argv)
 {
 	char *shellOutput = "myShell $ ";
+	char *pathOfCommand;
+	int status;
 	(void)ac;
 
 	_puts(shellOutput);
@@ -18,7 +20,6 @@ int main(int ac, char **argv)
 		{
 			return (-1);
 		}
-		char *pathOfCommand;
 
 		pathOfCommand = GetPath(argv[0]);
 		if (pathOfCommand)
@@ -29,8 +30,6 @@ int main(int ac, char **argv)
 				perror("fork");
 			else if (pid == 0)
 				ExcuteCommand(pathOfCommand, argv);
-			int status;
-
 			waitpid(pid, &status, 0);
 			if (WIFEXITED(status))
 				_puts(shellOutput);

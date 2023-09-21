@@ -10,6 +10,7 @@ char **HandleUserInput(void)
 	char *userInputCopy;
 	size_t inputSize = 0;
 	ssize_t inputCharCount = -1;
+	char **args;
 
 	inputCharCount = getline(&userInput, &inputSize, stdin);
 	if (inputCharCount == -1)
@@ -24,7 +25,6 @@ char **HandleUserInput(void)
 		return (NULL);
 	}
 	strcpy(userInputCopy, userInput);
-	char **args;
 
 	args = SubCommandInInput(userInput, userInputCopy);
 	return (args);
@@ -42,7 +42,7 @@ char **SubCommandInInput(char *userInput, char *userInputCopy)
 	const char *seprator = " \n";
 	int subCommandCount = 0;
 	char **argv;
-
+	int i;
 	char *subCommand;
 
 	subCommand = strtok(userInputCopy, seprator);
@@ -54,9 +54,6 @@ char **SubCommandInInput(char *userInput, char *userInputCopy)
 	subCommandCount++; /*for the NULL terminator*/
 	argv = malloc(sizeof(char *) * subCommandCount);
 	subCommand = strtok(userInput, seprator);
-
-	int i;
-
 	for (i = 0; subCommand != NULL; i++)
 	{
 		argv[i] = malloc(sizeof(char) * strlen(subCommand));
