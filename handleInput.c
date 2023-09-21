@@ -15,7 +15,6 @@ char **HandleUserInput(void)
 	inputCharCount = getline(&userInput, &inputSize, stdin);
 	if (inputCharCount == -1)
 	{
-		_puts("exiting shell...\n");
 		free(userInput);
 		return (NULL);
 	}

@@ -13,6 +13,7 @@ int main(int ac, char **argv)
 	int status;
 	int inputResult;
 	(void)ac;
+	if(isatty(STDIN_FILENO))
 	_puts(shellOutput);
 	while (1)
 	{
@@ -29,6 +30,8 @@ int main(int ac, char **argv)
 		pathOfCommand = GetPath(args[0]);
 		if (pathOfCommand)
 		{
+			if(isatty(STDIN_FILENO))
+			{
 			pid_t pid = fork();
 
 			if (pid == -1)
@@ -40,6 +43,9 @@ int main(int ac, char **argv)
 				_puts(shellOutput);
 			else
 				perror("");
+			}
+			else
+				ExcuteCommand(pathOfCommand, args);
 		}
 		else
 		{
