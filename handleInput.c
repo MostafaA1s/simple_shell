@@ -20,14 +20,12 @@ char **HandleUserInput(void)
 	}
 	else if (inputCharCount == 1)
 {
-		/*args = (char **)malloc(sizeof(char *));
-		args[0] = "Empty";*/
 		free(userInput);
 		return (ReturnEmpty());
 }
 	userInput = strtrim(userInput);
-	if(isspace(userInput[0]))
-		return (ReturnEmpty()); 
+	if (isspace(userInput[0]))
+		return (ReturnEmpty());
 	userInputCopy = malloc(sizeof(char) * inputCharCount);
 	if (userInputCopy == NULL)
 	{
@@ -85,6 +83,8 @@ char *GetPath(char *command)
 	int commandLength, subCommandDirLenght;
 	struct stat buffer;
 
+	if (strcmp(command, "exit") == 0)
+		exit(0);
 	if (path)
 	{
 		pathCopy = malloc(sizeof(char) * strlen(path));
@@ -130,7 +130,7 @@ char *GetPath(char *command)
  */
 int ExcuteCommand(char *commandPath, char **args)
 {
-	char *env[] = {NULL};
+	char **env = environ;
 
 	if (execve(commandPath, args, env) == -1)
 	{

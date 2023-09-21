@@ -13,7 +13,7 @@ int main(int ac, char **argv)
 	int status;
 	int inputResult;
 	(void)ac;
-	if(isatty(STDIN_FILENO))
+	if (isatty(STDIN_FILENO))
 	_puts(shellOutput);
 	while (1)
 	{
@@ -30,7 +30,9 @@ int main(int ac, char **argv)
 		pathOfCommand = GetPath(args[0]);
 		if (pathOfCommand)
 		{
-			if(isatty(STDIN_FILENO))
+			if (strcmp(pathOfCommand, "exit") == 0)
+				exit(0);
+			if (isatty(STDIN_FILENO))
 			{
 			pid_t pid = fork();
 
