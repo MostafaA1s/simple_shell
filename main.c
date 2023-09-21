@@ -42,7 +42,7 @@ int main(int ac, char **argv)
 		}
 		else
 		{
-			perror("");
+			perror(argv[0]);
 			_puts(shellOutput);
 		}
 	}
