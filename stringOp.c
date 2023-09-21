@@ -19,6 +19,8 @@ char *strtrim(char *str)
 	{
 		start++;
 	}
+	if(start == len)
+    return (" ");
 	while (isspace(str[end]))
 	{
 		end--;
@@ -30,4 +32,11 @@ char *strtrim(char *str)
 	str[i] = '\0';
 
 	return (str);
+}
+
+char **ReturnEmpty()
+{
+	char **args = (char **)malloc(sizeof(char *));
+	args[0] = "Empty";
+	return (args);
 }

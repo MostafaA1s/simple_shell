@@ -21,12 +21,14 @@ char **HandleUserInput(void)
 	}
 	else if (inputCharCount == 1)
 {
-		args = (char **)malloc(sizeof(char *));
-		args[0] = "Empty";
+		/*args = (char **)malloc(sizeof(char *));
+		args[0] = "Empty";*/
 		free(userInput);
-		return (args);
+		return (ReturnEmpty());
 }
 	userInput = strtrim(userInput);
+	if(isspace(userInput[0]))
+		return (ReturnEmpty()); 
 	userInputCopy = malloc(sizeof(char) * inputCharCount);
 	if (userInputCopy == NULL)
 	{

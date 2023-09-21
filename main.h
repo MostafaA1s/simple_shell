@@ -16,5 +16,6 @@ char **HandleUserInput(void);
 char *GetPath(char *command);
 int ExcuteCommand(char *commandPath,char **args);
 char *strtrim(char *str);
+char **ReturnEmpty();
 
 #endif
