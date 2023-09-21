@@ -9,23 +9,24 @@ int main(int ac, char **argv)
 {
 	char *shellOutput = "myShell $ ";
 	char *pathOfCommand;
+	char **args;
 	int status;
 	int inputResult;
 	(void)ac;
 	_puts(shellOutput);
 	while (1)
 	{
-		argv = HandleUserInput();
-		if (argv)
-		inputResult = strcmp(argv[0], "Empty");
-		if (argv == NULL)
+		args = HandleUserInput();
+		if (args)
+		inputResult = strcmp(args[0], "Empty");
+		if (args == NULL)
 			return (-1);
 		else if (inputResult == 0)
 		{
 			_puts(shellOutput);
 			continue;
 		}
-		pathOfCommand = GetPath(argv[0]);
+		pathOfCommand = GetPath(args[0]);
 		if (pathOfCommand)
 		{
 			pid_t pid = fork();
@@ -33,7 +34,7 @@ int main(int ac, char **argv)
 			if (pid == -1)
 				perror("fork");
 			else if (pid == 0)
-				ExcuteCommand(pathOfCommand, argv);
+				ExcuteCommand(pathOfCommand, args);
 			waitpid(pid, &status, 0);
 			if (WIFEXITED(status))
 				_puts(shellOutput);
